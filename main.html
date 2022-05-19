@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+    <title>Pow the Poet</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./img/pow.png">
+</head>
+
+<body>
+    <!-- Title and Pow. -->
+    <div class="row">
+        <h1>Meet Pow, the A.I. poet :  </h1>
+        <img src="./img/pow.png" alt="Pow" id="pow">
+    </div>
+
+    <!-- Form for user to enter prompt -->
+    <div id="inputBox">
+        <form id="form">
+            <label id="label">Enter a prompt for Pow and he'll write you a story!</label><br><br>
+            <textarea type="text" id="prompt" name="prompt"></textarea><br><br>
+            <input type="button" id="submit" value="Write the story >:)"/>
+        </form>
+    </div>
+
+    <div id="responses">
+        <p1>Responses:</p1>
+    </div>
+    <br>
+
+    <!-- Template to list all responses -->
+    <template id="cardTemplate">
+        <div class="card">
+            <img src="./img/x_icon.png" alt="X" id="X" onclick="document.body.removeChild(this.parentElement);">
+            <div id="respPrompt">
+                <p1 class="cardText"><b>Prompt: </b></p1>
+            </div>
+            <div id="respStory">
+                <p1 class="cardText"><b>Story: </b></p1>
+            </div>
+        </div>
+    </template>
+</body>
+
+<script>
+    var allCards = document.getElementsByClassName("card");
+
+    //when user clicks submit, spawn cards
+    document.getElementById("submit").onclick = async function submitForm () {
+        const prompt = document.getElementById("prompt");
+
+        if (prompt.value.length == 0) {
+            alert("You need to enter a prompt...");
+            return;
+        }
+
+        var cardTemp = document.getElementById("cardTemplate");
+        var cardDiv = cardTemp.content.querySelector("div");
+        var cardNode = document.importNode(cardDiv, true);
+
+        cardNode.querySelector("#respPrompt").innerHTML += prompt.value;
+        await setRespStory(cardNode.querySelector("#respStory"), prompt.value);
+        
+        document.getElementById("responses").style.visibility = 'visible';
+
+        if (allCards.length == 0) {
+            await document.body.appendChild(cardNode);
+        } else {
+            await document.body.insertBefore(cardNode, allCards[0]);
+        }
+        await cardNode.scrollIntoView(true);
+
+        return false;
+    };
+
+    //fetches the API response and sets that as the response story 
+    async function setRespStory (respStoryObject, respPrompt) {
+        const data = {
+            prompt: respPrompt,
+            temperature: 0.5,
+            max_tokens: 64,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+        };
+
+        await fetch("https://api.openai.com/v1/engines/text-curie-001/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${secrets.OPENAI_SECRET}`,
+            },
+            body: JSON.stringify(data),
+        }).then(async function (response) {
+            const fetched = await response.json();
+            respStoryObject.innerHTML += await fetched["choices"][0]["text"];
+        });
+    }
+</script>
