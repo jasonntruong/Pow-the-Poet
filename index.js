@@ -10,6 +10,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/mainFillTheLyric.html');
 });
 
-const server = app.listen(8080, () => {
+const server = app.listen((process.env.PORT || 5000), () => {
     console.log('Example app listening at http://localhost:8080');
 });
