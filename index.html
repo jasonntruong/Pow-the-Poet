@@ -87,7 +87,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${API_SECRET}`,
+                Authorization: `Bearer ${{API_SECRET}}`,
             },
             body: JSON.stringify(data),
         }).then(async function (response) {
