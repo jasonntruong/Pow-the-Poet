@@ -73,6 +73,7 @@
 
     //fetches the API response and sets that as the response story 
     async function setRespStory (respStoryObject, respPrompt) {
+        const API_SECRET = (process.env.OPENAI_SECRET);
         const data = {
             prompt: respPrompt,
             temperature: 0.5,
@@ -86,7 +87,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.OPENAI_SECRET}`,
+                Authorization: `Bearer ${API_SECRET}`,
             },
             body: JSON.stringify(data),
         }).then(async function (response) {
