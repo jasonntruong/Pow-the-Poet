@@ -86,7 +86,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer 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`,
+                Authorization: `Bearer ${OPENAI_SECRET}`,
             },
             body: JSON.stringify(data),
         }).then(async function (response) {
