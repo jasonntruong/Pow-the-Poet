@@ -73,7 +73,6 @@
 
     //fetches the API response and sets that as the response story 
     async function setRespStory (respStoryObject, respPrompt) {
-        const API_SECRET = (process.env.OPENAI_SECRET);
         const data = {
             prompt: respPrompt,
             temperature: 0.5,
